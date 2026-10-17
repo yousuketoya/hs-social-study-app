@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高校受験 社会 マスター</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --accent: #10b981;
+            --warn: #ef4444;
+            --history: #d97706;
+            --geo: #059669;
+            --civics: #7c3aed;
+            --status-perfect: #10b981;
+            --status-fuzzy: #f59e0b;
+            --status-unknown: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        /* 画面切り替え用 */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 0. オープニング画面（スプラッシュ） */
+        .welcome-screen {
+            text-align: center;
+            padding: 24px 12px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .welcome-screen p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .start-big-btn {
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            width: 100%;
+            max-width: 280px;
+            margin-bottom: 24px;
+        }
+
+        /* 表紙画面の設定カード */
+        .welcome-setup-card {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .welcome-setup-card h3 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .welcome-setup-card p {
+            margin: 0 0 10px 0;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        /* 1. ホーム（メニュー）画面 */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 1.15rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .home-btn {
+            padding: 6px 12px;
+            border: 1px solid #cbd5e1;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dashboard {
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .accuracy-title {
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .accuracy-value {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* メニューカード一覧 */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .menu-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-card:hover {
+            background: #f1f5f9;
+            border-color: var(--primary);
+        }
+
+        .menu-card h3 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .menu-card p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .menu-icon {
+            font-size: 1.8rem;
+        }
+
+        /* フィルター部分 */
+        .filter-section {
+            background: #f1f5f9;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-label {
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            border-radius: 18px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .mode-section {
+            display: none;
+        }
+
+        .mode-section.active {
+            display: block;
+        }
+
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .complete-card {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        .complete-card h2 {
+            color: #047857;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.80rem;
+            color: white;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .badge-歴史 {
+            background-color: var(--history);
+        }
+
+        .badge-地理 {
+            background-color: var(--geo);
+        }
+
+        .badge-公民 {
+            background-color: var(--civics);
+        }
+
+        .badge-perfect {
+            background-color: var(--status-perfect);
+        }
+
+        .badge-fuzzy {
+            background-color: var(--status-fuzzy);
+        }
+
+        .badge-unknown {
+            background-color: var(--status-unknown);
+        }
+
+        .problem-image {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 6px;
+            margin: 8px 0;
+            display: block;
+            object-fit: contain;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--history);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--warn);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        .status-btn-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .btn-status-perfect {
+            background: var(--status-perfect);
+            color: white;
+            flex: 1;
+            padding: 10px 4px;
+            font-size: 0.85rem;
+        }
+
+        .btn-status-fuzzy {
+            background: var(--status-fuzzy);
+            color: white;
+            flex: 1;
+            padding: 10px 4px;
+            font-size: 0.85rem;
+        }
+
+        .btn-status-unknown {
+            background: var(--status-unknown);
+            color: white;
+            flex: 1;
+            padding: 10px 4px;
+            font-size: 0.85rem;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            text-align: left;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .option-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .speed-select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 160px;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* モーダル（ポップアップ設定画面）用スタイル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 480px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ================= 0. オープニング画面（スプラッシュ） ================= -->
+        <div id="screen-welcome" class="screen active">
+            <div class="welcome-screen">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🇯🇵📚</div>
+                <h1>高校受験 社会 マスター</h1>
+                <p>歴史・地理・公民の重要語句をマスターしよう！</p>
+
+                <!-- スタートボタン -->
+                <button class="start-big-btn" onclick="goToHome()">学習をはじめる 🚀</button>
+
+                <!-- 撮影・問題追加・設定カード（表紙画面に配置） -->
+                <div class="welcome-setup-card">
+                    <h3>📷 AI・カメラ問題追加</h3>
+                    <p>教科書や問題集を撮影して自動で問題を作成します。</p>
+                    <button class="btn btn-primary" style="margin-top: 0; font-size: 0.88rem;"
+                        onclick="openAiModal()">⚙️ 設定・問題を追加する</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 1. ホーム画面（メニュー） ================= -->
+        <div id="screen-home" class="screen">
+            <div class="header-bar">
+                <h1>高校受験 社会 メニュー</h1>
+                <button class="home-btn" onclick="goToWelcome()">表紙へ 🏠</button>
+            </div>
+
+            <!-- 成績ダッシュボード -->
+            <div class="dashboard">
+                <div>
+                    <span class="accuracy-title">全体の習得率:</span>
+                    <span id="overall-accuracy" class="accuracy-value">0%</span>
+                    <span id="overall-counts" style="color: #64748b;">(0/0問クリア)</span>
+                </div>
+                <button onclick="resetProgress()"
+                    style="font-size: 0.75rem; border: none; background: #cbd5e1; padding: 4px 8px; border-radius: 4px; cursor: pointer;">成績リセット</button>
+            </div>
+
+            <!-- フィルター -->
+            <div class="filter-section">
+                <div class="filter-group">
+                    <span class="filter-label">1. 分野を選択:</span>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="setCategoryFilter('すべて')">すべて</button>
+                        <button class="filter-btn" onclick="setCategoryFilter('歴史')">📜 歴史</button>
+                        <button class="filter-btn" onclick="setCategoryFilter('地理')">🗺️ 地理</button>
+                        <button class="filter-btn" onclick="setCategoryFilter('公民')">⚖️ 公民</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">2. 理解度で絞り込み:</span>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="setStatusFilter('すべて')">すべて</button>
+                        <button class="filter-btn" onclick="setStatusFilter('perfect')">🟢 完璧</button>
+                        <button class="filter-btn" onclick="setStatusFilter('fuzzy')">🟡 曖昧</button>
+                        <button class="filter-btn" onclick="setStatusFilter('unknown')">🔴 分からない</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学習メニューカード一覧 -->
+            <div class="menu-grid">
+                <div class="menu-card" onclick="startLearningMode('quiz')">
+                    <div>
+                        <h3>✏️ 4択演習モード</h3>
+                        <p>一問一答形式でサクサク問題を解く</p>
+                    </div>
+                    <div class="menu-icon">➔</div>
+                </div>
+
+                <div class="menu-card" onclick="startLearningMode('audio')">
+                    <div>
+                        <h3>👂 耳学・聞き流しモード</h3>
+                        <p>音声自動読み上げで耳から暗記する</p>
+                    </div>
+                    <div class="menu-icon">➔</div>
+                </div>
+
+                <div class="menu-card" onclick="startLearningMode('recall')">
+                    <div>
+                        <h3>🧠 記述リコールモード</h3>
+                        <p>要点を自分の頭の中で思い出して解説を確認</p>
+                    </div>
+                    <div class="menu-icon">➔</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 2. 学習実行画面 ================= -->
+        <div id="screen-learning" class="screen">
+            <div class="header-bar">
+                <h1 id="learning-header-title">4択演習</h1>
+                <button class="home-btn" onclick="goToHome()">メニューに戻る 🏠</button>
+            </div>
+
+            <!-- 1. 4択クイズモード -->
+            <div id="quiz-mode" class="mode-section">
+                <div id="quiz-card-wrapper" class="card">
+                    <div>
+                        <span id="quiz-category" class="badge">歴史</span>
+                        <span id="quiz-status-badge" class="badge">未学習</span>
+                    </div>
+                    <h3 id="quiz-question">問題文</h3>
+                    <div id="quiz-image-container"></div>
+                    <div id="quiz-options"></div>
+                </div>
+
+                <div id="quiz-feedback" class="card hidden">
+                    <p id="feedback-result" style="font-weight: bold;"></p>
+                    <p id="feedback-explanation"></p>
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
+                    <p style="font-size: 0.82rem; font-weight: bold; margin-bottom: 4px;">理解度を選択:</p>
+                    <div class="status-btn-group">
+                        <button class="btn btn-status-perfect" onclick="setQuestionStatus('perfect')">🟢 完璧</button>
+                        <button class="btn btn-status-fuzzy" onclick="setQuestionStatus('fuzzy')">🟡 曖昧</button>
+                        <button class="btn btn-status-unknown" onclick="setQuestionStatus('unknown')">🔴 分からない</button>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="nextQuizQuestion()">次の問題へ
+                        ➔</button>
+                </div>
+
+                <!-- クイズ完了カード -->
+                <div id="quiz-complete-card" class="card complete-card hidden">
+                    <h2>🎉 全問回答完了！</h2>
+                    <p>対象の問題（<span id="completed-count">0</span>問）を解き終わりました。</p>
+                    <button class="btn btn-warning" onclick="restartIncorrectQuestions()">間違えた・苦手な問題を解き直す ⚠️</button>
+                    <button class="btn btn-primary" onclick="restartQuiz()">もう一度解き直す 🔄</button>
+                    <button class="btn btn-secondary" onclick="goToHome()">メニューに戻る 🏠</button>
+                </div>
+            </div>
+
+            <!-- 2. 耳学・音読モード -->
+            <div id="audio-mode" class="mode-section">
+                <div class="card">
+                    <h3>👂 聞き流しモード</h3>
+                    <p>対象の問題（<span id="audio-target-count">0</span>問）を自動再生します。</p>
+                    <div class="audio-controls">
+                        <button id="audio-toggle-btn" class="btn btn-success"
+                            onclick="toggleAudioMode()">再生スタート</button>
+                        <select id="audio-speed" class="speed-select">
+                            <option value="1.0">1.0x</option>
+                            <option value="1.25" selected>1.25x</option>
+                            <option value="1.5">1.5x</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="audio-display" class="card hidden">
+                    <div>
+                        <span id="audio-category" class="badge">歴史</span>
+                        <span id="audio-status-badge" class="badge">完璧</span>
+                    </div>
+                    <div id="audio-image-container"></div>
+                    <h4 id="audio-q-text">準備中...</h4>
+                    <p id="audio-a-text" style="color: var(--accent); font-weight: bold;"></p>
+                </div>
+            </div>
+
+            <!-- 3. 記述リコールモード -->
+            <div id="recall-mode" class="mode-section">
+                <div id="recall-card-wrapper" class="card">
+                    <div>
+                        <span id="recall-category" class="badge">歴史</span>
+                        <span id="recall-status-badge" class="badge">未学習</span>
+                    </div>
+                    <h3 id="recall-question">説明問題</h3>
+                    <div id="recall-image-container"></div>
+                    <button id="show-recall-ans-btn" class="btn btn-secondary"
+                        onclick="toggleRecallAnswer()">正解・解説を表示</button>
+                </div>
+                <div id="recall-answer-card" class="card hidden">
+                    <h4>【模範解答】</h4>
+                    <p id="recall-answer-text"></p>
+                    <p style="font-size: 0.82rem; font-weight: bold; margin-bottom: 4px;">理解度を評価:</p>
+                    <div class="status-btn-group">
+                        <button class="btn btn-status-perfect" onclick="saveRecallStatus('perfect')">🟢 できた</button>
+                        <button class="btn btn-status-fuzzy" onclick="saveRecallStatus('fuzzy')">🟡 曖昧</button>
+                        <button class="btn btn-status-unknown" onclick="saveRecallStatus('unknown')">🔴 全くダメ</button>
+                    </div>
+                </div>
+
+                <!-- リコール完了カード -->
+                <div id="recall-complete-card" class="card complete-card hidden">
+                    <h2>🎉 リコール学習完了！</h2>
+                    <p>対象の問題をすべて復習しました。</p>
+                    <button class="btn btn-warning" onclick="restartIncorrectRecall()">苦手な問題を復習する ⚠️</button>
+                    <button class="btn btn-primary" onclick="restartRecall()">最初からもう一度 🔄</button>
+                    <button class="btn btn-secondary" onclick="goToHome()">メニューに戻る 🏠</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= AI設定・問題追加モーダル（ポップアップ） ================= -->
+    <div id="ai-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ AI・カメラ問題追加の設定</h3>
+                <button class="close-modal-btn" onclick="closeAiModal()">✕</button>
+            </div>
+            <p style="font-size: 0.82rem; color: #64748b; margin-top: 0;">Gemini APIを使って、写真や文章から自動で問題と音声読み上げ文を生成します。</p>
+
+            <label class="filter-label">Gemini API キー:</label>
+            <input type="password" id="api-key-input" class="input-field" placeholder="AIzaSy...">
+
+            <label class="filter-label">📸 教科書・問題集の写真を撮影/選択（任意）:</label>
+            <input type="file" id="ai-image-input" accept="image/*" capture="environment" class="input-field"
+                onchange="previewImage(event)">
+            <img id="image-preview" class="preview-img hidden">
+
+            <label class="filter-label" style="margin-top: 6px;">✏️ リクエスト・テーマ:</label>
+            <input type="text" id="ai-prompt-input" class="input-field" placeholder="例: 鎌倉時代の文化について3問作って">
+
+            <button id="ai-generate-btn" class="btn btn-primary"
+                onclick="generateAndAddQuestions()">AIに問題を作ってもらう</button>
+            <div id="ai-loading" class="hidden"
+                style="text-align: center; margin-top: 10px; font-weight: bold; color: var(--primary);">画像を解析中...
+                しばらくお待ちください</div>
+        </div>
+    </div>
+
+    <script>
+        const defaultQuestions = [
+            {
+                id: 1,
+                category: "歴史",
+                question: "645年、中大兄皇子らが蘇我氏を倒して始まった政治改革は？",
+                imageUrl: "",
+                options: ["大化の改新", "建武の新政", "明治維新", "宗教改革"],
+                answer: "大化の改新",
+                explanation: "公地公民制などを目指して行われた古代日本の大きな改革です。",
+                audioQuestion: "ろっぴゃくよんじゅうごねん、 なかのおおえのおうじ らが そがし お たおして はじまった せいじかいかく わ？",
+                audioAnswer: "こたえ わ、 たいかのかいしん。 こうちこうみんせい お めざした せいじかいかくです。"
+            },
+            {
+                id: 2,
+                category: "地理",
+                question: "日本で最も流域面積が大きい河川はどれ？",
+                imageUrl: "",
+                options: ["信濃川", "利根川", "石狩川", "吉野川"],
+                answer: "利根川",
+                explanation: "日本一長い川は信濃川、流域面積が最も広い川は利根川です。",
+                audioQuestion: "にほん で もっとも りゅういきめんせき が おおきい かせん わ どれ？",
+                audioAnswer: "こたえ わ、 とねがわ。 なお、 ながさ が もっとも ながいのは しなのがわ です。"
+            }
+        ];
+
+        let fullQuestionBank = JSON.parse(localStorage.getItem('shakai_custom_questions')) || defaultQuestions;
+        let userStats = JSON.parse(localStorage.getItem('shakai_app_stats')) || {
+            history: {},
+            totalAttempts: 0,
+            totalCorrect: 0
+        };
+
+        let currentCategory = "すべて";
+        let currentStatus = "すべて";
+        let filteredQuestions = [];
+        let currentQuizIndex = 0;
+        let currentRecallIndex = 0;
+        let isAudioPlaying = false;
+        let audioTimer = null;
+
+        function saveData() {
+            localStorage.setItem('shakai_app_stats', JSON.stringify(userStats));
+            localStorage.setItem('shakai_custom_questions', JSON.stringify(fullQuestionBank));
+            updateDashboard();
+        }
+
+        function getQData(id) {
+            if (!userStats.history[id]) {
+                userStats.history[id] = { status: 'unlearned', correct: 0, total: 0, hasBeenCorrect: false };
+            }
+            return userStats.history[id];
+        }
+
+        function applyFilters() {
+            filteredQuestions = fullQuestionBank.filter(q => {
+                const qData = getQData(q.id);
+                const matchCat = (currentCategory === "すべて" || q.category === currentCategory);
+                const matchStatus = (currentStatus === "すべて" || qData.status === currentStatus);
+                return matchCat && matchStatus;
+            });
+            const countElem = document.getElementById('audio-target-count');
+            if (countElem) countElem.innerText = filteredQuestions.length;
+        }
+
+        function updateDashboard() {
+            const accElem = document.getElementById('overall-accuracy');
+            const countElem = document.getElementById('overall-counts');
+            const totalQuestions = fullQuestionBank.length;
+
+            let clearedCount = 0;
+            fullQuestionBank.forEach(q => {
+                const qData = getQData(q.id);
+                if (qData.hasBeenCorrect || qData.status === 'perfect') {
+                    clearedCount++;
+                }
+            });
+
+            if (totalQuestions === 0) {
+                accElem.innerText = "0%";
+                countElem.innerText = "(0/0問クリア)";
+            } else {
+                const pct = Math.round((clearedCount / totalQuestions) * 100);
+                accElem.innerText = `${pct}%`;
+                countElem.innerText = `(${clearedCount}/${totalQuestions}問クリア)`;
+            }
+        }
+
+        function resetProgress() {
+            if (confirm("成績と理解度記録をリセットしますか？（追加した問題は残ります）")) {
+                userStats = { history: {}, totalAttempts: 0, totalCorrect: 0 };
+                saveData();
+                updateDashboard();
+            }
+        }
+
+        function setCategoryFilter(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(cat));
+            });
+            applyFilters();
+        }
+
+        function setStatusFilter(st) {
+            currentStatus = st;
+            const stNames = { 'すべて': 'すべて', 'perfect': '完璧', 'fuzzy': '曖昧', 'unknown': '分からない' };
+            document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(stNames[st]));
+            });
+            applyFilters();
+        }
+
+        /* 画面切り替え制御 */
+        function showScreen(screenId) {
+            stopAudio();
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function goToWelcome() {
+            showScreen('screen-welcome');
+        }
+
+        function goToHome() {
+            applyFilters();
+            updateDashboard();
+            showScreen('screen-home');
+        }
+
+        function startLearningMode(mode) {
+            applyFilters();
+            showScreen('screen-learning');
+            document.querySelectorAll('.mode-section').forEach(sec => sec.classList.remove('active'));
+
+            const titles = {
+                'quiz': '4択演習モード',
+                'audio': '耳学・聞き流しモード',
+                'recall': '記述リコールモード'
+            };
+            document.getElementById('learning-header-title').innerText = titles[mode];
+
+            if (mode === 'quiz') {
+                document.getElementById('quiz-mode').classList.add('active');
+                currentQuizIndex = 0;
+                loadQuizQuestion();
+            } else if (mode === 'audio') {
+                document.getElementById('audio-mode').classList.add('active');
+            } else if (mode === 'recall') {
+                document.getElementById('recall-mode').classList.add('active');
+                currentRecallIndex = 0;
+                loadRecallQuestion();
+            }
+        }
+
+        /* モーダル表示・非表示制御 */
+        function openAiModal() {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) document.getElementById('api-key-input').value = savedKey;
+            document.getElementById('ai-modal').classList.remove('hidden');
+        }
+
+        function closeAiModal() {
+            document.getElementById('ai-modal').classList.add('hidden');
+        }
+
+        function renderImageHtml(url) {
+            if (!url) return '';
+            return `<img src="${url}" class="problem-image">`;
+        }
+
+        /* ---------------- 1. 4択クイズ ---------------- */
+        function loadQuizQuestion() {
+            const wrapper = document.getElementById('quiz-card-wrapper');
+            const completeCard = document.getElementById('quiz-complete-card');
+            const feedbackCard = document.getElementById('quiz-feedback');
+
+            if (filteredQuestions.length === 0) {
+                wrapper.innerHTML = "<h3>条件に該当する問題がありません。メニュー画面でフィルターを変更してください。</h3>";
+                wrapper.classList.remove('hidden');
+                feedbackCard.classList.add('hidden');
+                completeCard.classList.add('hidden');
+                return;
+            }
+
+            if (currentQuizIndex >= filteredQuestions.length) {
+                wrapper.classList.add('hidden');
+                feedbackCard.classList.add('hidden');
+                document.getElementById('completed-count').innerText = filteredQuestions.length;
+                completeCard.classList.remove('hidden');
+                return;
+            }
+
+            wrapper.classList.remove('hidden');
+            completeCard.classList.add('hidden');
+            feedbackCard.classList.add('hidden');
+
+            const q = filteredQuestions[currentQuizIndex];
+            const qData = getQData(q.id);
+
+            wrapper.innerHTML = `
+      <div>
+        <span class="badge badge-${q.category}">${q.category}</span>${renderStatusBadge(qData.status)}
+        <span style="font-size:0.8rem; color:#64748b; float:right;">${currentQuizIndex + 1} /${filteredQuestions.length}問</span>
+      </div>
+      <h3>${q.question}</h3>${renderImageHtml(q.imageUrl)}
+      <div id="quiz-options"></div>
+    `;
+
+            const optsContainer = document.getElementById('quiz-options');
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkQuizAnswer(opt);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            loadQuizQuestion();
+        }
+
+        function restartIncorrectQuestions() {
+            const incorrects = fullQuestionBank.filter(q => {
+                const qData = getQData(q.id);
+                const matchCat = (currentCategory === "すべて" || q.category === currentCategory);
+                return matchCat && (!qData.hasBeenCorrect || qData.status === 'fuzzy' || qData.status === 'unknown');
+            });
+
+            if (incorrects.length === 0) {
+                alert("✨ 素晴らしい！該当する間違い・苦手問題はありません。");
+                return;
+            }
+
+            filteredQuestions = incorrects;
+            currentQuizIndex = 0;
+            loadQuizQuestion();
+        }
+
+        function renderStatusBadge(status) {
+            if (status === 'perfect') return `<span class="badge badge-perfect">🟢 完璧</span>`;
+            if (status === 'fuzzy') return `<span class="badge badge-fuzzy">🟡 曖昧</span>`;
+            if (status === 'unknown') return `<span class="badge badge-unknown">🔴 分からない</span>`;
+            return `<span class="badge" style="background:#64748b; color:white;">未学習</span>`;
+        }
+
+        function checkQuizAnswer(selected) {
+            const q = filteredQuestions[currentQuizIndex];
+            const qData = getQData(q.id);
+            const feedback = document.getElementById('quiz-feedback');
+            const resText = document.getElementById('feedback-result');
+            const expText = document.getElementById('feedback-explanation');
+
+            const isCorrect = (selected === q.answer);
+
+            if (isCorrect && !qData.hasBeenCorrect) {
+                qData.hasBeenCorrect = true;
+                userStats.totalCorrect++;
+                userStats.totalAttempts++;
+            } else if (!isCorrect && !qData.hasBeenCorrect) {
+                userStats.totalAttempts++;
+            }
+
+            qData.total++;
+            if (isCorrect) {
+                resText.innerText = "⭕️ 正解！";
+                resText.style.color = "var(--accent)";
+                qData.correct++;
+            } else {
+                resText.innerText = `❌ 不正解（正解: ${q.answer}）`;
+                resText.style.color = "var(--warn)";
+            }
+
+            expText.innerText = q.explanation;
+            feedback.classList.remove('hidden');
+            saveData();
+        }
+
+        function setQuestionStatus(status) {
+            if (filteredQuestions.length === 0) return;
+            const q = filteredQuestions[currentQuizIndex];
+            getQData(q.id).status = status;
+            saveData();
+            nextQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            loadQuizQuestion();
+        }
+
+        /* ---------------- 2. 音声読み上げ ---------------- */
+        function speak(text, rate = 1.0) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = 'ja-JP';
+            uttr.rate = parseFloat(rate);
+            window.speechSynthesis.speak(uttr);
+        }
+
+        function toggleAudioMode() {
+            if (isAudioPlaying) {
+                stopAudio();
+            } else {
+                applyFilters();
+                if (filteredQuestions.length === 0) {
+                    alert("再生する問題がありません。");
+                    return;
+                }
+                isAudioPlaying = true;
+                document.getElementById('audio-toggle-btn').innerText = "停止";
+                document.getElementById('audio-toggle-btn').className = "btn btn-danger";
+                document.getElementById('audio-display').classList.remove('hidden');
+                runAudioLoop(0);
+            }
+        }
+
+        function stopAudio() {
+            isAudioPlaying = false;
+            window.speechSynthesis.cancel();
+            if (audioTimer) clearTimeout(audioTimer);
+            const btn = document.getElementById('audio-toggle-btn');
+            if (btn) {
+                btn.innerText = "再生スタート";
+                btn.className = "btn btn-success";
+            }
+        }
+
+        function runAudioLoop(index) {
+            if (!isAudioPlaying || filteredQuestions.length === 0) return;
+
+            if (index >= filteredQuestions.length) {
+                stopAudio();
+                alert("🎉 聞き流しが全問完了しました！");
+                return;
+            }
+
+            const q = filteredQuestions[index];
+            const qData = getQData(q.id);
+            const speed = parseFloat(document.getElementById('audio-speed').value);
+
+            // 画面要素の安全な更新
+            const catBadge = document.getElementById('audio-category');
+            if (catBadge) {
+                catBadge.innerText = q.category;
+                catBadge.className = `badge badge-${q.category}`;
+            }
+
+            const statusBadge = document.getElementById('audio-status-badge');
+            if (statusBadge) {
+                statusBadge.outerHTML = `<span id="audio-status-badge">${renderStatusBadge(qData.status)}</span>`;
+            }
+
+            const imgContainer = document.getElementById('audio-image-container');
+            if (imgContainer) {
+                imgContainer.innerHTML = renderImageHtml(q.imageUrl);
+            }
+
+            const qTextElem = document.getElementById('audio-q-text');
+            if (qTextElem) {
+                qTextElem.innerText = `問題 (${index + 1}/${filteredQuestions.length}): ` + q.question;
+            }
+
+            const aTextElem = document.getElementById('audio-a-text');
+            if (aTextElem) {
+                aTextElem.innerText = "答え: " + q.answer;
+            }
+
+            // 読み上げテキスト作成（平仮名音声文）
+            const qText = q.audioQuestion || q.question;
+            const aText = q.audioAnswer || ("こたえ わ、" + q.answer + "。");
+            const combinedText = qText + "。…… " + aText;
+
+            // 音声再生
+            speak(combinedText, speed);
+
+            const durationMs = Math.max(4000, (combinedText.length * 130) / speed);
+
+            audioTimer = setTimeout(() => {
+                if (isAudioPlaying) {
+                    runAudioLoop(index + 1);
+                }
+            }, durationMs);
+        }
+
+        /* ---------------- 3. リコールモード ---------------- */
+        function loadRecallQuestion() {
+            const wrapper = document.getElementById('recall-card-wrapper');
+            const completeCard = document.getElementById('recall-complete-card');
+            const answerCard = document.getElementById('recall-answer-card');
+
+            if (filteredQuestions.length === 0) {
+                wrapper.innerHTML = "<h3>対象の問題がありません。</h3>";
+                wrapper.classList.remove('hidden');
+                answerCard.classList.add('hidden');
+                completeCard.classList.add('hidden');
+                return;
+            }
+
+            if (currentRecallIndex >= filteredQuestions.length) {
+                wrapper.classList.add('hidden');
+                answerCard.classList.add('hidden');
+                completeCard.classList.remove('hidden');
+                return;
+            }
+
+            wrapper.classList.remove('hidden');
+            completeCard.classList.add('hidden');
+            answerCard.classList.add('hidden');
+
+            const q = filteredQuestions[currentRecallIndex];
+            const qData = getQData(q.id);
+
+            wrapper.innerHTML = `
+      <div>
+        <span class="badge badge-${q.category}">${q.category}</span>${renderStatusBadge(qData.status)}
+        <span style="font-size:0.8rem; color:#64748b; float:right;">${currentRecallIndex + 1} /${filteredQuestions.length}問</span>
+      </div>
+      <h3>${q.question}</h3>${renderImageHtml(q.imageUrl)}
+      <button id="show-recall-ans-btn" class="btn btn-secondary" onclick="toggleRecallAnswer()">正解・解説を表示</button>
+    `;
+
+            document.getElementById('recall-answer-text').innerText = `${q.answer}：${q.explanation}`;
+        }
+
+        function restartRecall() {
+            currentRecallIndex = 0;
+            loadRecallQuestion();
+        }
+
+        function restartIncorrectRecall() {
+            const incorrects = fullQuestionBank.filter(q => {
+                const qData = getQData(q.id);
+                const matchCat = (currentCategory === "すべて" || q.category === currentCategory);
+                return matchCat && (qData.status === 'fuzzy' || qData.status === 'unknown' || qData.status === 'unlearned');
+            });
+
+            if (incorrects.length === 0) {
+                alert("✨ 素晴らしい！苦手な問題はありません。");
+                return;
+            }
+
+            filteredQuestions = incorrects;
+            currentRecallIndex = 0;
+            loadRecallQuestion();
+        }
+
+        function toggleRecallAnswer() {
+            document.getElementById('recall-answer-card').classList.toggle('hidden');
+        }
+
+        function saveRecallStatus(status) {
+            if (filteredQuestions.length === 0) return;
+            const q = filteredQuestions[currentRecallIndex];
+            getQData(q.id).status = status;
+            saveData();
+            currentRecallIndex++;
+            loadRecallQuestion();
+        }
+
+        /* ---------------- 4. Gemini API 連携（促音・自然な発音指示ルール適用） ---------------- */
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('image-preview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('hidden');
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        async function generateAndAddQuestions() {
+            const apiKey = document.getElementById('api-key-input').value.trim();
+            const promptText = document.getElementById('ai-prompt-input').value.trim();
+            const imageInput = document.getElementById('ai-image-input');
+            const imageFile = imageInput.files[0];
+
+            if (!apiKey) {
+                alert("Gemini APIキーを入力してください。");
+                return;
+            }
+            if (!promptText && !imageFile) {
+                alert("写真を選択するか、リクエストテキストを入力してください。");
+                return;
+            }
+
+            localStorage.setItem('gemini_api_key', apiKey);
+
+            document.getElementById('ai-loading').classList.remove('hidden');
+            document.getElementById('ai-generate-btn').disabled = true;
+
+            let attachedImageUrl = "";
+            if (imageFile) {
+                attachedImageUrl = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(imageFile);
+                });
+            }
+
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            // AIへの指示（一問一答・年号促音発音・助詞わ変換のルール徹底）
+            // AIへの指示（音声読み上げ精度と問題クオリティを極限まで高めたプロンプト）
+            const systemInstruction = `
+あなたは高校受験社会科のプロ講師です。渡されたテキストまたは写真（教科書・問題集の画像）から、学習効率の高い問題を作成してください。
+
+【1. 問題作成の基本ルール】
+- **一問一答形式に限定**: 耳で聞いてすぐ理解できる「〜は何か？」「〜を何というか？」というシンプルな一問一答形式のみを作成してください。「誤っているものを選べ」「適切なものをすべて選べ」等の複雑な正誤問題は禁止です。
+- **主語と時代・分野の明確化**: 音声だけで理解できるよう、問題文の先頭に「鎌倉時代、〜」「南アメリカ州で〜」のように対象の時代や地域を明記してください。
+- **選択肢の質**: ダミーの選択肢（3つ）は、同じ時代や同分野の紛らわしい重要語句を選び、良質な選択肢にしてください。
+- **写真解析ノイズ除去**: 写真から作成する場合、ページ数や「問1」「(1)」などの余計な文字列は除外してください。
+
+【2. 音声読み上げ用ひらがな（audioQuestion / audioAnswer）の超徹底ルール】
+合成音声（TTS）が絶対に誤読しないよう、以下の表記ルールを厳格に守ってください。
+
+- **助詞の書き換え（最優先）**:
+  - 助詞の「は」は **必ず「わ」** に書き換える（例：「答えは」➔「こたえ わ」）。
+  - 助詞の「へ」は **必ず「え」** に書き換える（例：「東へ」➔「ひがし え」）。
+  - 助詞の「を」は **必ず「お」** に書き換える（例：「蘇我氏を」➔「そがし お」）。
+- **年号・数字・助数詞の発音**:
+  - 1文字ずつ棒読みさせず、日本の自然な促音・濁音・撥音を正確に入れたひらがなにする。
+  - 例：「645年 ➔ ろっぴゃくよんじゅうごねん」「1603年 ➔ せんろっぴゃくさんねん」「800年 ➔ はっぴゃくねん」
+  - 例：「1世紀 ➔ いっせいき」「8世紀 ➔ はっせいき」「15世紀 ➔ じゅうごせいき」
+- **難読熟語・歴史用語のひらがな化**:
+  - 漢字の誤読を防ぐため、必ず正しい読み仮名にする。（例：「富国強兵 ➔ ふこくきょうへい」「殖産興業 ➔ しょくさんこうぎょう」「御家人 ➔ ごけにん」）
+- **audioAnswer の構成**:
+  - 「こたえ わ、〇〇。〜（簡潔な解説）」の形にし、聞き流すだけで知識が完璧に定着するフォーマットにすること。
+
+出力は必ず、以下のJSON配列フォーマットのみを返してください（マークダウンの\`\`\`jsonなどの装飾文字は含めないでください）。
+
+[
+  {
+    "id": 12345,
+    "category": "歴史" (または "地理", "公民"),
+    "question": "漢字混じりの一問一答の問題文",
+    "options": ["正解を含む4つの選択肢"],
+    "answer": "正解の選択肢",
+    "explanation": "簡潔な解説文",
+    "audioQuestion": "上記ルールを完全に適用した音声用ひらがな問題文",
+    "audioAnswer": "上記ルールを完全に適用した音声用ひらがな解答・解説文"
+  }
+]
+`;
+
+            const parts = [];
+            let userPrompt = systemInstruction;
+            if (promptText) {
+                userPrompt += "\n\n要望・補足指示: " + promptText;
+            } else {
+                userPrompt += "\n\n画像の内容から重要語句をピックアップして高校受験用の問題を1〜3問作成してください。";
+            }
+            parts.push({ text: userPrompt });
+
+            if (imageFile) {
+                const base64Data = await fileToBase64(imageFile);
+                parts.push({
+                    inline_data: {
+                        mime_type: imageFile.type,
+                        data: base64Data
+                    }
+                });
+            }
+
+            const requestBody = { contents: [{ parts: parts }] };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const textResponse = data.candidates[0].content.parts[0].text;
+                const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
+                const newItems = JSON.parse(cleanJson);
+
+                newItems.forEach((item, idx) => {
+                    item.id = Date.now() + idx;
+                    item.imageUrl = attachedImageUrl;
+                    fullQuestionBank.push(item);
+                });
+
+                saveData();
+                alert(`${newItems.length}問の問題が正常に追加されました！`);
+
+                document.getElementById('ai-prompt-input').value = "";
+                imageInput.value = "";
+                document.getElementById('image-preview').classList.add('hidden');
+                closeAiModal();
+
+            } catch (error) {
+                console.error(error);
+                alert("問題の生成に失敗しました: " + error.message);
+            } finally {
+                document.getElementById('ai-loading').classList.add('hidden');
+                document.getElementById('ai-generate-btn').disabled = false;
+            }
+        }
+
+        // 初期化実行
+        updateDashboard();
+        applyFilters();
+    </script>
+</body>
+
+</html>
